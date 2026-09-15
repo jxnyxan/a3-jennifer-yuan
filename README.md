@@ -2,7 +2,7 @@
 
 This project is my third assignment for CS4241. It expands my previous Movie Watchlist application into a full-stack web application with user authentication and persistent database storage.
 
-Live Website: [ADD YOUR A3 RENDER LINK HERE]
+Live Website: https://a3-jennifer-yuan.onrender.com/
 
 The goal of the application is to allow users to create their own personal movie watchlist. Users can create an account, log in, add movies, edit movies, delete movies, and rate movies from 1–10. The server automatically creates a recommendation based on the rating.
 
