@@ -1,178 +1,416 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
-  console.log('main.js loaded')
+  // =========================================================
+  // ELEMENTS
+  // =========================================================
 
+  const authSection = document.getElementById('auth-section')
+  const userSection = document.getElementById('user-section')
+  const movieApp = document.getElementById('movie-app')
 
-  const registerForm = document.querySelector('#register-form')
-  const loginForm = document.querySelector('#login-form')
+  const registerForm = document.getElementById('register-form')
+  const loginForm = document.getElementById('login-form')
 
-  const registerUsername = document.querySelector('#register-username')
-  const registerPassword = document.querySelector('#register-password')
+  const registerUsername = document.getElementById('register-username')
+  const registerPassword = document.getElementById('register-password')
 
-  const loginUsername = document.querySelector('#login-username')
-  const loginPassword = document.querySelector('#login-password')
+  const loginUsername = document.getElementById('login-username')
+  const loginPassword = document.getElementById('login-password')
 
-  const authSection = document.querySelector('#auth-section')
-  const authMessage = document.querySelector('#auth-message')
+  const authMessage = document.getElementById('auth-message')
+  const currentUsername = document.getElementById('current-user')
+  const logoutButton = document.getElementById('logout-button')
 
-  const userSection = document.querySelector('#user-section')
-  const currentUser = document.querySelector('#current-user')
-  const logoutButton = document.querySelector('#logout-button')
+  const movieForm = document.getElementById('movie-form')
+  const movieInput = document.getElementById('movie')
+  const genreInput = document.getElementById('genre')
+  const ratingInput = document.getElementById('rating')
 
-  const movieApp = document.querySelector('#movie-app')
-
-
-  const form = document.querySelector('#movie-form')
-  const results = document.querySelector('#movie-results')
-
-  const movieInput = document.querySelector('#movie')
-  const genreInput = document.querySelector('#genre')
-  const ratingInput = document.querySelector('#rating')
-
-  const movieIdInput = document.querySelector('#movie-id')
-
-  const submitButton = document.querySelector('#submit-button')
-  const cancelButton = document.querySelector('#cancel-button')
-
-  const movieCount = document.querySelector('#movie-count')
-  const message = document.querySelector('#message')
+  const movieTableBody = document.getElementById('movie-results')
+  const movieCount = document.getElementById('movie-count')
+  const message = document.getElementById('message')
+  const clearButton = document.getElementById('clear-button')
 
 
-  function showLoggedIn(username) {
-
-    currentUser.textContent = username
-
-    authSection.classList.add('hidden')
-    userSection.classList.remove('hidden')
-    movieApp.classList.remove('hidden')
-
-    authMessage.textContent = ''
-
-    getMovies()
-  }
-
+  // =========================================================
+  // HELPER FUNCTIONS
+  // =========================================================
 
   function showLoggedOut() {
-
     authSection.classList.remove('hidden')
     userSection.classList.add('hidden')
     movieApp.classList.add('hidden')
 
-    currentUser.textContent = ''
-
-    results.innerHTML = ''
+    currentUsername.textContent = ''
+    movieTableBody.innerHTML = ''
     movieCount.textContent = '0 movies'
   }
 
-  async function checkLogin() {
 
-  try {
+  function showLoggedIn(username) {
+    authSection.classList.add('hidden')
+    userSection.classList.remove('hidden')
+    movieApp.classList.remove('hidden')
 
-    const response = await fetch('/api/user')
-    const data = await response.json()
-
-    if (data.loggedIn) {
-      showLoggedIn(data.username)
-    } else {
-      showLoggedOut()
-    }
-
-  } catch (error) {
-
-    console.error('Check login error:', error)
-    showLoggedOut()
-
+    currentUsername.textContent = username
   }
-}
 
 
-  registerForm.addEventListener('submit', async function(event) {
+  function showMessage(text) {
+    if (message) {
+      message.textContent = text
+    }
+  }
 
+
+  function showAuthMessage(text) {
+    if (authMessage) {
+      authMessage.textContent = text
+    }
+  }
+
+
+  // =========================================================
+  // CHECK LOGIN
+  // =========================================================
+
+  async function checkLogin() {
+    try {
+      const response = await fetch('/api/user')
+
+      if (!response.ok) {
+        throw new Error('Unable to check login status.')
+      }
+
+      const data = await response.json()
+
+      if (data.loggedIn) {
+        showLoggedIn(data.username)
+        await loadMovies()
+      } else {
+        showLoggedOut()
+      }
+
+    } catch (error) {
+      console.error('Login check error:', error)
+      showLoggedOut()
+      showAuthMessage('Could not connect to the server.')
+    }
+  }
+
+
+  // =========================================================
+  // REGISTER
+  // =========================================================
+
+  registerForm.addEventListener('submit', async function (event) {
     event.preventDefault()
 
-    console.log('Register button clicked')
-
-    authMessage.textContent = 'Creating account...'
+    showAuthMessage('')
 
     const username = registerUsername.value.trim()
     const password = registerPassword.value
 
-
     if (!username || !password) {
-
-      authMessage.textContent =
-        'Please enter a username and password.'
-
+      showAuthMessage('Please enter a username and password.')
       return
     }
 
-
     try {
-
       const response = await fetch('/api/register', {
-
         method: 'POST',
-
         headers: {
           'Content-Type': 'application/json'
         },
-
         body: JSON.stringify({
           username: username,
           password: password
         })
-
       })
-
 
       const data = await response.json()
 
-
       if (!response.ok) {
-
-        authMessage.textContent =
-          data.error || 'Could not create account.'
-
+        showAuthMessage(data.error || 'Unable to create account.')
         return
       }
 
-
-      console.log('Account created:', data.username)
-
       registerForm.reset()
+
+      showAuthMessage('')
 
       showLoggedIn(data.username)
 
+      await loadMovies()
 
     } catch (error) {
-
-      console.error('Registration error:', error)
-
-      authMessage.textContent =
-        'Could not connect to the server.'
-
+      console.error('Register error:', error)
+      showAuthMessage('Could not connect to the server.')
     }
-
   })
 
 
-  loginForm.addEventListener('submit', async function(event) {
+  // =========================================================
+  // LOGIN
+  // =========================================================
 
+  loginForm.addEventListener('submit', async function (event) {
     event.preventDefault()
 
-    console.log('Login button clicked')
-
-    authMessage.textContent = 'Logging in...'
-
+    showAuthMessage('')
 
     const username = loginUsername.value.trim()
     const password = loginPassword.value
 
-
     if (!username || !password) {
+      showAuthMessage('Please enter a username and password.')
+      return
+    }
 
-      authMessage.textContent =
-        'Please enter a username and password.'
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        showAuthMessage(data.error || 'Unable to log in.')
+        return
+      }
+
+      loginForm.reset()
+
+      showAuthMessage('')
+
+      showLoggedIn(data.username)
+
+      await loadMovies()
+
+    } catch (error) {
+      console.error('Login error:', error)
+      showAuthMessage('Could not connect to the server.')
+    }
+  })
+
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  logoutButton.addEventListener('click', async function () {
+
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST'
+      })
+
+      if (!response.ok) {
+        throw new Error('Unable to log out.')
+      }
+
+      showLoggedOut()
+
+      showAuthMessage('You have been logged out.')
+
+    } catch (error) {
+      console.error('Logout error:', error)
+      showMessage('Could not log out.')
+    }
+  })
+
+
+  // =========================================================
+  // LOAD MOVIES
+  // =========================================================
+
+  async function loadMovies() {
+
+    try {
+      const response = await fetch('/api/movies')
+
+      if (response.status === 401) {
+        showLoggedOut()
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error('Unable to load movies.')
+      }
+
+      const movies = await response.json()
+
+      displayMovies(movies)
+
+    } catch (error) {
+      console.error('Load movies error:', error)
+      showMessage('Could not load movies.')
+    }
+  }
+
+
+  // =========================================================
+  // DISPLAY MOVIES
+  // =========================================================
+
+  function displayMovies(movies) {
+
+    movieTableBody.innerHTML = ''
+
+    if (!Array.isArray(movies)) {
+      console.error('Expected movie array but received:', movies)
+      movieCount.textContent = '0 movies'
+      return
+    }
+
+    if (movies.length === 1) {
+      movieCount.textContent = '1 movie'
+    } else {
+      movieCount.textContent = `${movies.length} movies`
+    }
+
+
+    movies.forEach(function (movie) {
+
+      const row = document.createElement('tr')
+
+
+      // -----------------------------------------------------
+      // Movie name
+      // -----------------------------------------------------
+
+      const movieCell = document.createElement('td')
+      movieCell.textContent = movie.movie
+
+
+      // -----------------------------------------------------
+      // Genre
+      // -----------------------------------------------------
+
+      const genreCell = document.createElement('td')
+      genreCell.textContent = movie.genre
+
+
+      // -----------------------------------------------------
+      // Rating
+      // -----------------------------------------------------
+
+      const ratingCell = document.createElement('td')
+      ratingCell.textContent = movie.rating
+
+
+      // -----------------------------------------------------
+      // Recommendation
+      // -----------------------------------------------------
+
+      const recommendationCell = document.createElement('td')
+
+      const recommendationBadge = document.createElement('span')
+
+      recommendationBadge.textContent = movie.recommendation
+
+      recommendationBadge.classList.add('recommendation')
+
+      if (movie.recommendation === 'Must Watch') {
+        recommendationBadge.classList.add('must-watch')
+      } else if (movie.recommendation === 'Worth Watching') {
+        recommendationBadge.classList.add('worth-watching')
+      } else {
+        recommendationBadge.classList.add('skip')
+      }
+
+      recommendationCell.appendChild(recommendationBadge)
+
+
+      // -----------------------------------------------------
+      // Actions
+      // -----------------------------------------------------
+
+      const actionsCell = document.createElement('td')
+
+      const editButton = document.createElement('button')
+
+      editButton.type = 'button'
+      editButton.textContent = 'Edit'
+      editButton.classList.add('btn', 'btn-secondary', 'btn-sm')
+
+      editButton.setAttribute(
+        'aria-label',
+        `Edit ${movie.movie}`
+      )
+
+      editButton.addEventListener('click', function () {
+        editMovie(movie)
+      })
+
+
+      const deleteButton = document.createElement('button')
+
+      deleteButton.type = 'button'
+      deleteButton.textContent = 'Delete'
+      deleteButton.classList.add('btn', 'btn-danger', 'btn-sm')
+
+      deleteButton.setAttribute(
+        'aria-label',
+        `Delete ${movie.movie}`
+      )
+
+      deleteButton.addEventListener('click', function () {
+        deleteMovie(movie._id)
+      })
+
+
+      actionsCell.appendChild(editButton)
+      actionsCell.appendChild(document.createTextNode(' '))
+      actionsCell.appendChild(deleteButton)
+
+
+      // -----------------------------------------------------
+      // Add cells to row
+      // -----------------------------------------------------
+
+      row.appendChild(movieCell)
+      row.appendChild(genreCell)
+      row.appendChild(ratingCell)
+      row.appendChild(recommendationCell)
+      row.appendChild(actionsCell)
+
+
+      // -----------------------------------------------------
+      // Add row to table
+      // -----------------------------------------------------
+
+      movieTableBody.appendChild(row)
+    })
+  }
+
+
+  // =========================================================
+  // ADD MOVIE
+  // =========================================================
+
+  movieForm.addEventListener('submit', async function (event) {
+
+    event.preventDefault()
+
+    showMessage('')
+
+    const movie = movieInput.value.trim()
+    const genre = genreInput.value
+    const rating = Number(ratingInput.value)
+
+
+    if (!movie || !genre || rating < 1 || rating > 10) {
+      showMessage(
+        'Please enter a movie, genre, and rating from 1 to 10.'
+      )
 
       return
     }
@@ -180,8 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     try {
 
-      const response = await fetch('/api/login', {
-
+      const response = await fetch('/api/movies', {
         method: 'POST',
 
         headers: {
@@ -189,10 +426,10 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         body: JSON.stringify({
-          username: username,
-          password: password
+          movie: movie,
+          genre: genre,
+          rating: rating
         })
-
       })
 
 
@@ -201,430 +438,261 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (!response.ok) {
 
-        authMessage.textContent =
-          data.error || 'Could not log in.'
+        if (response.status === 401) {
+          showLoggedOut()
+          return
+        }
+
+        showMessage(data.error || 'Unable to add movie.')
 
         return
       }
 
 
-      console.log('Logged in:', data.username)
-
-      loginForm.reset()
-
-      showLoggedIn(data.username)
-
-
-    } catch (error) {
-
-      console.error('Login error:', error)
-
-      authMessage.textContent =
-        'Could not connect to the server.'
-
-    }
-
-  })
-
-
-  logoutButton.addEventListener('click', async function() {
-
-    try {
-
-      const response = await fetch('/api/logout', {
-        method: 'POST'
-      })
-
-
-      if (!response.ok) {
-
-        authMessage.textContent =
-          'Could not log out.'
-
-        return
-      }
-
-
-      resetForm()
-
-      showLoggedOut()
-
-      authMessage.textContent =
-        'Logged out.'
-
-
-    } catch (error) {
-
-      console.error('Logout error:', error)
-
-      authMessage.textContent =
-        'Could not connect to the server.'
-
-    }
-
-  })
-
-  function displayMovies(movies) {
-
-    results.innerHTML = ''
-
-
-    movies.forEach(function(movie) {
-
-      const row = document.createElement('tr')
-
-
-      row.innerHTML = `
-        <td>${movie.movie}</td>
-
-        <td>${movie.genre}</td>
-
-        <td>${movie.rating}/10</td>
-
-        <td>${movie.recommendation}</td>
-
-        <td class="actions">
-
-          <button
-            class="edit-button small-button"
-            data-id="${movie._id}"
-          >
-            Edit
-          </button>
-
-          <button
-            class="delete-button small-button"
-            data-id="${movie._id}"
-          >
-            Delete
-          </button>
-
-        </td>
-      `
-
-
-      results.appendChild(row)
-
-    })
-
-
-    if (movies.length === 0) {
-
-      const row = document.createElement('tr')
-
-      row.innerHTML = `
-        <td
-          colspan="5"
-          class="empty-state"
-        >
-          No movies yet. Add your first movie!
-        </td>
-      `
-
-      results.appendChild(row)
-
-    }
-
-
-    if (movies.length === 1) {
-
-      movieCount.textContent = '1 movie'
-
-    } else {
-
-      movieCount.textContent =
-        movies.length + ' movies'
-
-    }
-
-  }
-
-
-  async function getMovies() {
-
-    try {
-
-      const response = await fetch('/api/movies')
-
-
-      if (response.status === 401) {
-
-        showLoggedOut()
-
-        return
-      }
-
-
-      const data = await response.json()
-
-
-      if (!response.ok) {
-
-        message.textContent =
-          data.error || 'Could not load movies.'
-
-        return
-      }
-
-
-      displayMovies(data)
-
-
-    } catch (error) {
-
-      console.error('Get movies error:', error)
-
-      message.textContent =
-        'Could not connect to the server.'
-
-    }
-
-  }
-
-
-  form.addEventListener('submit', async function(event) {
-
-    event.preventDefault()
-
-
-    const movieData = {
-
-      movie: movieInput.value.trim(),
-
-      genre: genreInput.value,
-
-      rating: Number(ratingInput.value)
-
-    }
-
-
-    const editingId = movieIdInput.value
-
-
-    try {
-
-      let response
-
-
-      if (editingId) {
-
-        response = await fetch(
-          '/api/movies/' + editingId,
-          {
-
-            method: 'PUT',
-
-            headers: {
-              'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify(movieData)
-
-          }
-        )
-
-      }
-
-
-  
-
-      else {
-
-        response = await fetch(
-          '/api/movies',
-          {
-
-            method: 'POST',
-
-            headers: {
-              'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify(movieData)
-
-          }
-        )
-
-      }
-
-
-      const data = await response.json()
-
-
-      if (response.status === 401) {
-
-        showLoggedOut()
-
-        return
-      }
-
-
-      if (!response.ok) {
-
-        message.textContent =
-          data.error || 'Could not save movie.'
-
-        return
-      }
-
-
-      displayMovies(data)
-
-
-      if (editingId) {
-
-        message.textContent =
-          'Movie updated.'
-
-      } else {
-
-        message.textContent =
-          'Movie added.'
-
-      }
-
-
-      resetForm()
+      // IMPORTANT:
+      // The POST response is ONE movie object.
+      // displayMovies() requires an ARRAY.
+      //
+      // Therefore we reload the complete list instead of doing:
+      //
+      // displayMovies(data)
+
+      movieForm.reset()
+
+      showMessage('Movie added successfully.')
+
+      await loadMovies()
 
 
     } catch (error) {
 
       console.error('Save movie error:', error)
 
-      message.textContent =
-        'Could not connect to the server.'
-
+      showMessage('Could not connect to the server.')
     }
-
   })
 
 
-  results.addEventListener('click', async function(event) {
+  // =========================================================
+  // EDIT MOVIE
+  // =========================================================
+
+  async function editMovie(movie) {
+
+    const newMovie = window.prompt(
+      'Movie title:',
+      movie.movie
+    )
+
+    if (newMovie === null) {
+      return
+    }
+
+
+    const newGenre = window.prompt(
+      'Genre:',
+      movie.genre
+    )
+
+    if (newGenre === null) {
+      return
+    }
+
+
+    const newRatingInput = window.prompt(
+      'Rating (1-10):',
+      movie.rating
+    )
+
+    if (newRatingInput === null) {
+      return
+    }
+
+
+    const newRating = Number(newRatingInput)
 
 
     if (
-      event.target.classList.contains(
-        'delete-button'
-      )
+      !newMovie.trim() ||
+      !newGenre.trim() ||
+      !Number.isFinite(newRating) ||
+      newRating < 1 ||
+      newRating > 10
     ) {
 
-      const id = event.target.dataset.id
+      showMessage(
+        'Please enter a valid movie, genre, and rating from 1 to 10.'
+      )
+
+      return
+    }
+
+
+    try {
+
+      const response = await fetch(
+        `/api/movies/${movie._id}`,
+        {
+          method: 'PUT',
+
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+          body: JSON.stringify({
+            movie: newMovie.trim(),
+            genre: newGenre.trim(),
+            rating: newRating
+          })
+        }
+      )
+
+
+      const data = await response.json()
+
+
+      if (!response.ok) {
+
+        if (response.status === 401) {
+          showLoggedOut()
+          return
+        }
+
+        showMessage(data.error || 'Unable to update movie.')
+
+        return
+      }
+
+
+      showMessage('Movie updated successfully.')
+
+      await loadMovies()
+
+
+    } catch (error) {
+
+      console.error('Update movie error:', error)
+
+      showMessage('Could not update movie.')
+    }
+  }
+
+
+  // =========================================================
+  // DELETE ONE MOVIE
+  // =========================================================
+
+  async function deleteMovie(id) {
+
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this movie?'
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+
+    try {
+
+      const response = await fetch(
+        `/api/movies/${id}`,
+        {
+          method: 'DELETE'
+        }
+      )
+
+
+      const data = await response.json()
+
+
+      if (!response.ok) {
+
+        if (response.status === 401) {
+          showLoggedOut()
+          return
+        }
+
+        showMessage(data.error || 'Unable to delete movie.')
+
+        return
+      }
+
+
+      showMessage('Movie deleted successfully.')
+
+      await loadMovies()
+
+
+    } catch (error) {
+
+      console.error('Delete movie error:', error)
+
+      showMessage('Could not delete movie.')
+    }
+  }
+
+
+  // =========================================================
+  // CLEAR ALL MOVIES
+  // =========================================================
+
+  if (clearButton) {
+
+    clearButton.addEventListener('click', async function () {
+
+      const confirmed = window.confirm(
+        'Are you sure you want to delete all movies from your watchlist?'
+      )
+
+      if (!confirmed) {
+        return
+      }
 
 
       try {
 
-        const response = await fetch(
-          '/api/movies/' + id,
-          {
-            method: 'DELETE'
-          }
-        )
+        const response = await fetch('/api/movies', {
+          method: 'DELETE'
+        })
 
 
         const data = await response.json()
 
 
-        if (response.status === 401) {
-
-          showLoggedOut()
-
-          return
-        }
-
-
         if (!response.ok) {
 
-          message.textContent =
-            data.error || 'Could not delete movie.'
+          if (response.status === 401) {
+            showLoggedOut()
+            return
+          }
+
+          showMessage(
+            data.error || 'Unable to clear watchlist.'
+          )
 
           return
         }
 
 
-        displayMovies(data)
+        showMessage('Watchlist cleared successfully.')
 
-        message.textContent =
-          'Movie deleted.'
+        await loadMovies()
 
 
       } catch (error) {
 
-        console.error('Delete movie error:', error)
+        console.error('Clear movies error:', error)
 
-        message.textContent =
-          'Could not connect to the server.'
-
+        showMessage('Could not clear watchlist.')
       }
-
-    }
-
-    if (
-      event.target.classList.contains(
-        'edit-button'
-      )
-    ) {
-
-      const row = event.target.closest('tr')
-
-      const cells = row.querySelectorAll('td')
-
-
-      movieInput.value =
-        cells[0].textContent.trim()
-
-      genreInput.value =
-        cells[1].textContent.trim()
-
-      ratingInput.value =
-        cells[2]
-          .textContent
-          .replace('/10', '')
-          .trim()
-
-
-      movieIdInput.value =
-        event.target.dataset.id
-
-
-      submitButton.textContent =
-        'Save Changes'
-
-      cancelButton.classList.remove(
-        'hidden'
-      )
-
-      message.textContent =
-        'Editing movie.'
-
-    }
-
-  })
-
-  cancelButton.addEventListener('click', function() {
-
-    resetForm()
-
-    message.textContent =
-      'Edit canceled.'
-
-  })
-
-
-  function resetForm() {
-
-    form.reset()
-
-    movieIdInput.value = ''
-
-    submitButton.textContent =
-      'Add Movie'
-
-    cancelButton.classList.add(
-      'hidden'
-    )
-
+    })
   }
 
+
+  // =========================================================
+  // START APPLICATION
+  // =========================================================
 
   checkLogin()
 

@@ -35,6 +35,8 @@ const authLimiter = rateLimit({
 app.use('/api/login', authLimiter)
 app.use('/api/register', authLimiter)
 
+app.use(express.json())
+
 app.use(express.static('public'))
 
 app.use(
