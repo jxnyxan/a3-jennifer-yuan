@@ -15,7 +15,6 @@ const port = process.env.PORT || 3000
 
 app.use(
   helmet({
-    // Allows Bootstrap/other CDN resources used by the frontend
     contentSecurityPolicy: false
   })
 )
