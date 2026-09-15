@@ -100,13 +100,20 @@ Movie Watchlist.
     smaller screens, the account and movie sections switch to vertical
     layouts and the movie table can scroll horizontally.
 
-## Challenges
+    ### Express Middleware
 
-One challenge I faced was changing my previous Movie Watchlist from storing data in a JavaScript array to using MongoDB. I had to update the server routes to use MongoDB queries and MongoDB `_id` values.
+I used the following five separately installed Express middleware packages:
 
-Another challenge was implementing authentication and making sure each user only had access to their own movies. I solved this by using sessions to identify the logged-in user and including the username when storing and querying movie data.
+1. **express-session** - Maintains user sessions so users can remain authenticated while using their personal movie watchlist.
 
-I also had to make sure environment variables such as my MongoDB connection string and session secret were not uploaded to GitHub. I stored these values in a `.env` file and added `.env` to `.gitignore`.
+2. **helmet** - Adds security-related HTTP headers to help protect the application from common web security issues.
+
+3. **compression** - Compresses HTTP responses before they are sent to the browser to reduce the amount of data transferred.
+
+4. **morgan** - Logs HTTP requests to the server console, which helps with monitoring and debugging requests.
+
+5. **express-rate-limit** - Limits repeated requests to the registration and login endpoints to help protect the authentication system from excessive requests.
+
 
 ## AI Use
 
