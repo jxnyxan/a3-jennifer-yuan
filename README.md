@@ -1,3 +1,5 @@
+I messed up the due date with this assignment and talked with the professor. He said it was ok for me to turn it in late.
+
 # Movie Watchlist
 
 This project is my third assignment for CS4241. It expands my previous Movie Watchlist application into a full-stack web application with user authentication and persistent database storage.
