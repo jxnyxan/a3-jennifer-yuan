@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  // =========================================================
-  // ELEMENTS
-  // =========================================================
-
   const authSection = document.getElementById('auth-section')
   const userSection = document.getElementById('user-section')
   const movieApp = document.getElementById('movie-app')
@@ -31,10 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const message = document.getElementById('message')
   const clearButton = document.getElementById('clear-button')
 
-
-  // =========================================================
-  // HELPER FUNCTIONS
-  // =========================================================
 
   function showLoggedOut() {
     authSection.classList.remove('hidden')
@@ -70,10 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  // =========================================================
-  // CHECK LOGIN
-  // =========================================================
-
   async function checkLogin() {
     try {
       const response = await fetch('/api/user')
@@ -97,11 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
       showAuthMessage('Could not connect to the server.')
     }
   }
-
-
-  // =========================================================
-  // REGISTER
-  // =========================================================
 
   registerForm.addEventListener('submit', async function (event) {
     event.preventDefault()
@@ -148,11 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
       showAuthMessage('Could not connect to the server.')
     }
   })
-
-
-  // =========================================================
-  // LOGIN
-  // =========================================================
 
   loginForm.addEventListener('submit', async function (event) {
     event.preventDefault()
@@ -201,9 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
 
-  // =========================================================
-  // LOGOUT
-  // =========================================================
 
   logoutButton.addEventListener('click', async function () {
 
@@ -226,10 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
-
-  // =========================================================
-  // LOAD MOVIES
-  // =========================================================
 
   async function loadMovies() {
 
@@ -255,11 +226,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
-  // =========================================================
-  // DISPLAY MOVIES
-  // =========================================================
-
   function displayMovies(movies) {
 
     movieTableBody.innerHTML = ''
@@ -282,33 +248,19 @@ document.addEventListener('DOMContentLoaded', function () {
       const row = document.createElement('tr')
 
 
-      // -----------------------------------------------------
-      // Movie name
-      // -----------------------------------------------------
-
       const movieCell = document.createElement('td')
       movieCell.textContent = movie.movie
 
 
-      // -----------------------------------------------------
-      // Genre
-      // -----------------------------------------------------
-
+    
       const genreCell = document.createElement('td')
       genreCell.textContent = movie.genre
 
 
-      // -----------------------------------------------------
-      // Rating
-      // -----------------------------------------------------
 
       const ratingCell = document.createElement('td')
       ratingCell.textContent = movie.rating
 
-
-      // -----------------------------------------------------
-      // Recommendation
-      // -----------------------------------------------------
 
       const recommendationCell = document.createElement('td')
 
@@ -328,10 +280,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       recommendationCell.appendChild(recommendationBadge)
 
-
-      // -----------------------------------------------------
-      // Actions
-      // -----------------------------------------------------
 
       const actionsCell = document.createElement('td')
 
@@ -372,10 +320,6 @@ document.addEventListener('DOMContentLoaded', function () {
       actionsCell.appendChild(deleteButton)
 
 
-      // -----------------------------------------------------
-      // Add cells to row
-      // -----------------------------------------------------
-
       row.appendChild(movieCell)
       row.appendChild(genreCell)
       row.appendChild(ratingCell)
@@ -383,18 +327,10 @@ document.addEventListener('DOMContentLoaded', function () {
       row.appendChild(actionsCell)
 
 
-      // -----------------------------------------------------
-      // Add row to table
-      // -----------------------------------------------------
-
       movieTableBody.appendChild(row)
     })
   }
 
-
-  // =========================================================
-  // ADD MOVIE
-  // =========================================================
 
   movieForm.addEventListener('submit', async function (event) {
 
@@ -448,15 +384,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
 
-
-      // IMPORTANT:
-      // The POST response is ONE movie object.
-      // displayMovies() requires an ARRAY.
-      //
-      // Therefore we reload the complete list instead of doing:
-      //
-      // displayMovies(data)
-
       movieForm.reset()
 
       showMessage('Movie added successfully.')
@@ -473,9 +400,6 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
 
-  // =========================================================
-  // EDIT MOVIE
-  // =========================================================
 
   async function editMovie(movie) {
 
@@ -577,11 +501,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
-  // =========================================================
-  // DELETE ONE MOVIE
-  // =========================================================
-
   async function deleteMovie(id) {
 
     const confirmed = window.confirm(
@@ -631,11 +550,6 @@ document.addEventListener('DOMContentLoaded', function () {
       showMessage('Could not delete movie.')
     }
   }
-
-
-  // =========================================================
-  // CLEAR ALL MOVIES
-  // =========================================================
 
   if (clearButton) {
 
@@ -689,10 +603,6 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
 
-
-  // =========================================================
-  // START APPLICATION
-  // =========================================================
 
   checkLogin()
 
