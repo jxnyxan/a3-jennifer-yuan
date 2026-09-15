@@ -69,9 +69,7 @@ Movie Watchlist.
    explaining that users should enter a movie title, select a genre, and
    provide a rating from 1 to 10.
 
-4. **Keep content clear and concise:** I used short labels and instructions
-   such as "Movie", "Genre", "Rating (1–10)", "Register", and "Log In" so
-   actions and form requirements are easy to understand.
+4. **Associate labels with form controls** I explicitly associated text labels with the username, password, movie title, genre, and rating form controls using HTML label elements and matching for and id attributes. This allows screen readers to announce the purpose of each field and makes the forms easier to understand and navigate.
 
 5. **Provide sufficient contrast:** I selected foreground and background
    colors that provide readable contrast and tested the page using
@@ -100,6 +98,10 @@ Movie Watchlist.
     smaller screens, the account and movie sections switch to vertical
     layouts and the movie table can scroll horizontally.
 
+11. **Provide clear instructions and feedback for user input:** I used clearly labeled form fields for authentication and movie information and provided status/error messages when actions succeed or fail. This gives users clear feedback about what information is required and whether their action was successful.
+
+12. **Make functionality keyboard accessible:** I used standard HTML form controls, links, and buttons for interactive features such as login, registration, adding movies, editing, deleting, canceling edits, and logging out. This allows users to navigate and operate the application using a keyboard without requiring a mouse.
+
     ### Express Middleware
 
 I used the following five separately installed Express middleware packages:
@@ -113,6 +115,7 @@ I used the following five separately installed Express middleware packages:
 4. **morgan** - Logs HTTP requests to the server console, which helps with monitoring and debugging requests.
 
 5. **express-rate-limit** - Limits repeated requests to the registration and login endpoints to help protect the authentication system from excessive requests.
+
 
 
 ## AI Use
