@@ -246,21 +246,16 @@ app.post('/api/logout', function(req, res) {
 
 
 app.get('/api/user', function(req, res) {
-
-  if (!req.session.username) {
-
-    return res.status(401).json({
+  if (req.session.username) {
+    res.json({
+      loggedIn: true,
+      username: req.session.username
+    })
+  } else {
+    res.json({
       loggedIn: false
     })
-
   }
-
-
-  res.json({
-    loggedIn: true,
-    username: req.session.username
-  })
-
 })
 
 app.get(

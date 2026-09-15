@@ -98,10 +98,9 @@ h3 {
   margin: 0;
 }
 
-main {
+#movie-app {
   width: min(1200px, 95%);
   margin: 0 auto 3rem;
-
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -290,11 +289,11 @@ footer {
   .auth-grid {
     flex-direction: column;
   }
-
-  main {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+  
+  #movie-app {
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
   #form-section,
   #results-section {
