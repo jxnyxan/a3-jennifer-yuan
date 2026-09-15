@@ -102,7 +102,7 @@ Movie Watchlist.
 
 12. **Make functionality keyboard accessible:** I used standard HTML form controls, links, and buttons for interactive features such as login, registration, adding movies, editing, deleting, canceling edits, and logging out. This allows users to navigate and operate the application using a keyboard without requiring a mouse.
 
-    ### Express Middleware
+### Express Middleware
 
 I used the following five separately installed Express middleware packages:
 
