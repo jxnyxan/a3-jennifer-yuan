@@ -66,26 +66,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function checkLogin() {
 
-    try {
+  try {
 
-      const response = await fetch('/api/user')
+    const response = await fetch('/api/user')
+    const data = await response.json()
 
-      if (!response.ok) {
-        showLoggedOut()
-        return
-      }
-
-      const data = await response.json()
-
+    if (data.loggedIn) {
       showLoggedIn(data.username)
-
-    } catch (error) {
-
-      console.error('Check login error:', error)
-
+    } else {
       showLoggedOut()
     }
+
+  } catch (error) {
+
+    console.error('Check login error:', error)
+    showLoggedOut()
+
   }
+}
 
 
   registerForm.addEventListener('submit', async function(event) {
