@@ -18,6 +18,7 @@
     content="Create a personal movie watchlist, rate movies, and receive recommendations based on your ratings."
   >
 
+  <!-- Google Font -->
   <link
     rel="preconnect"
     href="https://fonts.googleapis.com"
@@ -30,7 +31,7 @@
   >
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap"
     rel="stylesheet"
   >
 
@@ -61,6 +62,10 @@
 
 <body>
 
+
+<!-- ===================================== -->
+<!-- HEADER -->
+<!-- ===================================== -->
 
 <header>
 
@@ -100,9 +105,13 @@
   <section
     class="card"
     id="auth-section"
+    aria-labelledby="account-heading"
   >
 
-    <h2>Account</h2>
+    <h2 id="account-heading">
+      Account
+    </h2>
+
 
     <div class="auth-grid">
 
@@ -111,7 +120,9 @@
 
       <div>
 
-        <h3>Create Account</h3>
+        <h3>
+          Create Account
+        </h3>
 
         <form id="register-form">
 
@@ -124,6 +135,7 @@
             <input
               id="register-username"
               class="form-control"
+              name="username"
               type="text"
               autocomplete="username"
               required
@@ -141,6 +153,7 @@
             <input
               id="register-password"
               class="form-control"
+              name="password"
               type="password"
               autocomplete="new-password"
               required
@@ -165,7 +178,9 @@
 
       <div>
 
-        <h3>Log In</h3>
+        <h3>
+          Log In
+        </h3>
 
         <form id="login-form">
 
@@ -178,6 +193,7 @@
             <input
               id="login-username"
               class="form-control"
+              name="username"
               type="text"
               autocomplete="username"
               required
@@ -195,6 +211,7 @@
             <input
               id="login-password"
               class="form-control"
+              name="password"
               type="password"
               autocomplete="current-password"
               required
@@ -214,11 +231,15 @@
 
       </div>
 
+
     </div>
 
 
+    <!-- Authentication feedback -->
+
     <p
       id="auth-message"
+      role="status"
       aria-live="polite"
     ></p>
 
@@ -232,6 +253,7 @@
   <section
     class="card hidden"
     id="user-section"
+    aria-label="Current user"
   >
 
     <div class="user-row">
@@ -269,17 +291,23 @@
     <section
       class="card"
       id="form-section"
+      aria-labelledby="movie-form-heading"
     >
 
-      <h2>Add a Movie</h2>
+      <h2 id="movie-form-heading">
+        Add a Movie
+      </h2>
 
       <p id="movie-instructions">
-        Enter a movie title, choose a genre, and give the movie a rating
-        from 1 to 10.
+        Enter a movie title, choose a genre, and give the movie
+        a rating from 1 to 10.
       </p>
 
 
-      <form id="movie-form">
+      <form
+        id="movie-form"
+        aria-describedby="movie-instructions"
+      >
 
         <input
           type="hidden"
@@ -289,6 +317,8 @@
 
         <div class="form-grid">
 
+
+          <!-- MOVIE TITLE -->
 
           <div class="field">
 
@@ -307,6 +337,8 @@
 
           </div>
 
+
+          <!-- GENRE -->
 
           <div class="field">
 
@@ -342,6 +374,8 @@
           </div>
 
 
+          <!-- RATING -->
+
           <div class="field">
 
             <label for="rating">
@@ -362,8 +396,11 @@
 
           </div>
 
+
         </div>
 
+
+        <!-- FORM BUTTONS -->
 
         <div class="button-row">
 
@@ -374,7 +411,6 @@
           >
             Add Movie
           </button>
-
 
           <button
             id="cancel-button"
@@ -387,8 +423,11 @@
         </div>
 
 
+        <!-- Movie operation feedback -->
+
         <p
           id="message"
+          role="status"
           aria-live="polite"
         ></p>
 
@@ -397,18 +436,26 @@
     </section>
 
 
+    <!-- ===================================== -->
     <!-- RESULTS -->
+    <!-- ===================================== -->
 
     <section
       class="card"
       id="results-section"
+      aria-labelledby="watchlist-heading"
     >
 
       <div class="results-heading">
 
-        <h2>My Watchlist</h2>
+        <h2 id="watchlist-heading">
+          My Watchlist
+        </h2>
 
-        <span id="movie-count">
+        <span
+          id="movie-count"
+          aria-live="polite"
+        >
           0 movies
         </span>
 
@@ -419,15 +466,34 @@
 
         <table class="table table-hover align-middle">
 
+          <caption class="visually-hidden">
+            Your saved movies with genre, rating,
+            recommendation, and available actions.
+          </caption>
+
           <thead>
 
             <tr>
 
-              <th scope="col">Movie</th>
-              <th scope="col">Genre</th>
-              <th scope="col">Rating</th>
-              <th scope="col">Recommendation</th>
-              <th scope="col">Actions</th>
+              <th scope="col">
+                Movie
+              </th>
+
+              <th scope="col">
+                Genre
+              </th>
+
+              <th scope="col">
+                Rating
+              </th>
+
+              <th scope="col">
+                Recommendation
+              </th>
+
+              <th scope="col">
+                Actions
+              </th>
 
             </tr>
 
@@ -450,6 +516,10 @@
 
 </main>
 
+
+<!-- ===================================== -->
+<!-- FOOTER -->
+<!-- ===================================== -->
 
 <footer>
 
