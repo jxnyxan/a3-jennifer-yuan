@@ -86,29 +86,20 @@ Movie Watchlist.
    styling and descriptive button text for actions such as Register,
    Log In, Log Out, Add Movie, Edit, Delete, and Cancel Edit.
 
-8. **Provide easily identifiable feedback:** I created message areas for
-   authentication and movie operations. These use aria-live="polite" so
-   dynamically generated status messages can be announced by assistive
-   technologies.
-
-9. **Associate labels with every form control:** Each visible input and
-   select element has a descriptive label connected using matching `for`
-   and `id` attributes.
-
-10. **Identify page language:** I added `lang="en"` to the HTML element
+8. **Identify page language:** I added `lang="en"` to the HTML element
     so assistive technologies can determine that the page is written
     in English.
 
-11. **Use markup to convey meaning and structure:** I used semantic HTML
+9. **Use markup to convey meaning and structure:** I used semantic HTML
     elements including header, main, section, form, table, thead, tbody,
     and footer rather than constructing the entire interface from generic
     div elements.
 
-12. **Create designs for different viewport sizes:** I created a responsive
+10. **Create designs for different viewport sizes:** I created a responsive
     layout using a CSS media query and Bootstrap responsive features. On
     smaller screens, the account and movie sections switch to vertical
     layouts and the movie table can scroll horizontally.
-    
+
 ## Challenges
 
 One challenge I faced was changing my previous Movie Watchlist from storing data in a JavaScript array to using MongoDB. I had to update the server routes to use MongoDB queries and MongoDB `_id` values.
