@@ -1,111 +1,64 @@
-Assignment 3 - Persistence: Two-tier Web Application with Database, Express server, and CSS template
-===
+# Movie Watchlist
 
-Due: September 15th, by 1:59 PM.
+This project is my third assignment for CS4241. It expands my previous Movie Watchlist application into a full-stack web application with user authentication and persistent database storage.
 
-This assignment continues where we left off in A2, extending it to use a popular Node.js server framework (express), a database (mongodb), and a CSS application framework / template of your choice (Bootstrap, Material Design, Semantic UI, Pure etc.)
+Live Website: [ADD YOUR A3 RENDER LINK HERE]
 
-Baseline Requirements
----
+The goal of the application is to allow users to create their own personal movie watchlist. Users can create an account, log in, add movies, edit movies, delete movies, and rate movies from 1–10. The server automatically creates a recommendation based on the rating.
 
-Your application is required to implement the following functionalities:
+Each user's movie watchlist is connected to their account, so users only see the movies that they have added.
 
-- a `Server`, created using Express (no alternatives will be accepted for this assignment)
-- a `Results` functionality which shows all data associated with a logged in user (except passwords)
-- a `Form/Entry` functionality which allows users to add, modify, and delete data items (must be all three!) associated with their user name / account. 
-- Persistent data storage in between server sessions using [mongodb](https://www.mongodb.com/cloud/atlas) (you *must* use mongodb for this assignment). You can use either the [official mongodb node.js library](https://www.npmjs.com/package/mongodb) or use the [Mongoose library](https://www.npmjs.com/package/mongoose), which enables you to define formal schemas for your database. Please be aware that the course staff cannot provide in-depth support for use of Mongoose.  
-- Use of a [CSS framework or template](https://github.com/troxler/awesome-css-frameworks). 
-This should do the bulk of your styling/CSS for you and be appropriate to your application. 
-For example, don't use [NES.css](https://nostalgic-css.github.io/NES.css/) (which is awesome!) unless you're creating a game or some type of retro 80s site.
+One of the main challenges I faced was connecting the application to MongoDB and changing my previous server-side data storage to persistent database storage. I also had to change the application so that each movie is associated with the user who created it.
 
-Your application is required to demonstrate the use of the following concepts:  
+For authentication, I used username and password authentication with `bcrypt` and `express-session`. Passwords are hashed using bcrypt before being stored in MongoDB. I chose this authentication strategy because it worked well with my existing Express server and allowed me to create a simple registration and login system.
 
-HTML:  
-- HTML input tags and form fields of various flavors (`<textarea>`, `<input>`, checkboxes, radio buttons etc.)
-- HTML that can display all data *for a particular authenticated user*. Note that this is different from the last assignnment, which required the display of all data in memory on the server.
-
-Note that it might make sense to have two pages for this assignment, one that handles login / authentication, and one that contains the rest of your application.
-For example, when visiting the home page for the assignment, users could be presented with a login form. After submitting the login form, if the login is 
-successful, they are taken to the main application. If they fail, they are sent back to the login to try again. For this assignment, it is acceptable to simply create 
-new user accounts upon login if none exist, however, you must alert your users to this fact.  
-
-CSS:  
-- CSS styling should primarily be provided by your chosen template/framework. 
-Oftentimes a great deal of care has been put into designing CSS templates; 
-don't override their stylesheets unless you are extremely confident in your graphic design capabilities. 
-The idea is to use CSS templates that give you a professional looking design aesthetic without requiring you to be a graphic designer yourself.
-
-JavaScript:  
-- At minimum, a small amount of front-end JavaScript to get / fetch data from the server. 
-See the [previous assignment](https://github.com/cs-4241-23/shortstack) for reference.
-
-Node.js:  
-- A server using Express and a persistent database (mongodb).
-
-General:  
-- Your site should achieve at least 90% on the `Performance`, `Best Practices`, `Accessibility`, and `SEO` tests 
-using Google [Lighthouse](https://developers.google.com/web/tools/lighthouse) (don't worry about the PWA test, and don't worry about scores for mobile devices).
-Test early and often so that fixing problems doesn't lead to suffering at the end of the assignment. 
-
-Deliverables
----
-
-Do the following to complete this assignment:
-
-1. Implement your project with the above requirements. I'd begin by converting your A2 assignment. First, change the server to use express. Then, modify the server to use mongodb instead of storing data locally. Last but not least, implement user accounts and login. User accounts and login is often the hardest part of this assignment, so budget your time accordingly.
-2. Deploy your project to Render and fill in the appropriate fields in your package.json file.
-3. Test your project to make sure that when someone goes to your main page on Render, it displays correctly.
-4. Ensure that your project has the proper naming scheme `a3-yourfirstname-yourlastname` so we can find it.
-5. Fork this repository and modify the README to the specifications below.
-6. Create and submit a Pull Request to the original repo. Name the pull request using the following template: `a3-firstname-lastname`.
-
-Achievements
----
-
-Below are suggested technical and design achievements. You can use these to help boost your grade up to an A and customize the 
-assignment to your personal interests, for a maximum twenty additional points and a maximum grade of a 100%. 
-These are recommended achievements, but feel free to create/implement your own... just make sure you thoroughly describe what you did in your README, 
-why it was challenging, and how many points you think the achievement should be worth. 
-ALL ACHIEVEMENTS MUST BE DESCRIBED IN YOUR README IN ORDER TO GET CREDIT FOR THEM.
-
-*Technical*
-- (10 points) Implement OAuth authentication, perhaps with a library like [passport.js](http://www.passportjs.org/). 
-*You must either use Github authenticaion or provide a username/password to access a dummy account*. 
-Course staff cannot be expected, for example, to have a personal Facebook, Google, or Twitter account to use when grading this assignment. 
-Please contact the course staff if you have any questions about this. This is the hardest achievement in Webware; you have been warned!  
-- (5 points) Get 100% (not 98%, not 99%, but 100%) in all four lighthouse tests required for this assignment.
-- (up to 5 points) List up to five Express middleware packages you used and a short (one sentence) summary of what each one does. THESE MUST BE SEPARATE PACKAGES THAT YOU INSTALL VIA NPM, NOT THE ONES INCLUDED WITH EXPRESS. So express.json and express.static don't count here. For a starting point on middleware, see [this list](https://expressjs.com/en/resources/middleware.html).
-
-*Design/UX*
-- (10 points) Make your site accessible using the [resources and hints available from the W3C](https://www.w3.org/WAI/), Implement/follow twelve tips from their [tips for writing](https://www.w3.org/WAI/tips/writing/), [tips for designing](https://www.w3.org/WAI/tips/designing/), and [tips for development](https://www.w3.org/WAI/tips/developing/). *Note that all twelve must require active work on your part*. 
-For example, even though your page will most likely not have a captcha, you don't get this as one of your twelve tips to follow because you're effectively 
-getting it "for free" without having to actively change anything about your site. 
-Contact the course staff if you have any questions about what qualifies and doesn't qualify in this regard. 
-List each tip that you followed and describe what you did to follow it in your site.
-- (5 points) Describe how your site uses the CRAP principles in the Non-Designer's Design Book readings. 
-Which element received the most emphasis (contrast) on each page? 
-How did you use proximity to organize the visual information on your page? 
-What design elements (colors, fonts, layouts, etc.) did you use repeatedly throughout your site? 
-How did you use alignment to organize information and/or increase contrast for particular elements. 
-Write a paragraph of at least 125 words *for each of the four principles* (four paragraphs, 500 words in total).
-
-Sample Readme (delete the above when you're ready to submit, and modify the below so with your links and descriptions)
----
-
-## Your Web Application Title
-
-A link to your project running on render.
-
-Include a very brief summary of your project here. Images are encouraged, along with concise, high-level text. Be sure to include:
-
-- the goal of the application
-- challenges you faced in realizing the application
-- what authentication strategy you chose to use and why (choosing one because it seemed the easiest to implement is perfectly acceptable)
-- what CSS framework you used and why
-  - include any modifications to the CSS framework you made via custom CSS you authored
+For my CSS framework, I used Bootstrap 5. I used Bootstrap components and classes for forms, buttons, tables, cards, and responsive styling. I also kept my own custom CSS to change Bootstrap's default appearance and give the Movie Watchlist its own design. My custom CSS changes the colors, spacing, card appearance, recommendation labels, layout, and responsive behavior.
 
 ## Technical Achievements
-- **Tech Achievement 1**: I used OAuth authentication via the GitHub strategy
 
-### Design/Evaluation Achievements
-- **Design Achievement 1**: I followed the following tips from the W3C Web Accessibility Initiative...
+- **Tech Achievement 1: MongoDB Persistent Storage**  
+  I connected my application to MongoDB Atlas using the MongoDB Node.js driver. Movie and user information is stored in MongoDB instead of only being stored in server memory. This allows the data to remain available even when the server is restarted.
+
+- **Tech Achievement 2: User Authentication**  
+  I created a registration, login, and logout system using `bcrypt` and `express-session`. User passwords are hashed before being stored in the database, and passwords are not returned when displaying user information.
+
+- **Tech Achievement 3: User-Specific Data**  
+  Each movie is associated with the username of the user who created it. When a user logs in, the server only returns movies associated with that user's account. Users cannot view or modify another user's watchlist.
+
+- **Tech Achievement 4: Full CRUD Functionality**  
+  Logged-in users can create, read, update, and delete movies from their watchlist. When a movie is edited, the server also recalculates its recommendation based on the new rating.
+
+- **Tech Achievement 5: Client and Server Communication**  
+  I used `fetch()` to communicate between the browser and the Express server. Movie data and account actions can be updated without reloading the entire webpage.
+
+- **Tech Achievement 6: Derived Recommendation Field**  
+  The server automatically calculates a recommendation based on the user's movie rating:
+  - Ratings 8–10 = Must Watch
+  - Ratings 6–7 = Worth Watching
+  - Ratings 1–5 = Skip
+
+## Design/Evaluation Achievements
+
+- **Design Achievement 1: Bootstrap CSS Framework**  
+  I used Bootstrap 5 as the CSS framework for the application. I used Bootstrap classes including `form-control`, `form-select`, `btn`, `btn-primary`, `btn-secondary`, `table`, `table-hover`, `table-responsive`, and `align-middle`.
+
+- **Design Achievement 2: Custom Bootstrap Styling**  
+  I combined Bootstrap with my own external CSS stylesheet. I customized the background colors, cards, spacing, buttons, movie recommendation labels, forms, and overall page layout while still using Bootstrap components.
+
+- **Design Achievement 3: Responsive Layout**  
+  The application adjusts for smaller screens. The login/register sections and movie application change from horizontal layouts to vertical layouts on smaller devices, and the movie table can scroll horizontally when necessary.
+
+- **Design Achievement 4: Visual Recommendation System**  
+  I created different visual styles for the three recommendation categories. "Must Watch," "Worth Watching," and "Skip" each have their own background style so users can quickly understand the recommendation.
+
+## Challenges
+
+One challenge I faced was changing my previous Movie Watchlist from storing data in a JavaScript array to using MongoDB. I had to update the server routes to use MongoDB queries and MongoDB `_id` values.
+
+Another challenge was implementing authentication and making sure each user only had access to their own movies. I solved this by using sessions to identify the logged-in user and including the username when storing and querying movie data.
+
+I also had to make sure environment variables such as my MongoDB connection string and session secret were not uploaded to GitHub. I stored these values in a `.env` file and added `.env` to `.gitignore`.
+
+## AI Use
+
+I used ChatGPT to help explain errors, debug my Node.js and MongoDB implementation, troubleshoot authentication, and help with HTML, CSS, JavaScript, Express, and Bootstrap implementation.
