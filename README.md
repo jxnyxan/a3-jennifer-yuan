@@ -51,6 +51,64 @@ For my CSS framework, I used Bootstrap 5. I used Bootstrap components and classe
 - **Design Achievement 4: Visual Recommendation System**  
   I created different visual styles for the three recommendation categories. "Must Watch," "Worth Watching," and "Skip" each have their own background style so users can quickly understand the recommendation.
 
+## W3C Accessibility Achievements
+
+I followed twelve accessibility recommendations from the W3C Web
+Accessibility Initiative (WAI) when designing and developing my
+Movie Watchlist.
+
+1. **Provide informative, unique page titles:** I gave the page the
+   descriptive title "Movie Watchlist - Personal Movie Recommendations"
+   so users and assistive technologies can identify the purpose of the page.
+
+2. **Use headings to convey meaning and structure:** I organized the page
+   using an H1 for the application title and H2/H3 headings for sections
+   including Account, Create Account, Log In, Add a Movie, and My Watchlist.
+
+3. **Provide clear instructions:** I added instructions to the movie form
+   explaining that users should enter a movie title, select a genre, and
+   provide a rating from 1 to 10.
+
+4. **Keep content clear and concise:** I used short labels and instructions
+   such as "Movie", "Genre", "Rating (1–10)", "Register", and "Log In" so
+   actions and form requirements are easy to understand.
+
+5. **Provide sufficient contrast:** I selected foreground and background
+   colors that provide readable contrast and tested the page using
+   Lighthouse's accessibility audit.
+
+6. **Don't use color alone to convey information:** Movie recommendations
+   use both visual colors and text labels: "Must Watch", "Worth Watching",
+   and "Skip". Users do not need to distinguish the colors to understand
+   the recommendation.
+
+7. **Make interactive elements easy to identify:** I used Bootstrap button
+   styling and descriptive button text for actions such as Register,
+   Log In, Log Out, Add Movie, Edit, Delete, and Cancel Edit.
+
+8. **Provide easily identifiable feedback:** I created message areas for
+   authentication and movie operations. These use aria-live="polite" so
+   dynamically generated status messages can be announced by assistive
+   technologies.
+
+9. **Associate labels with every form control:** Each visible input and
+   select element has a descriptive label connected using matching `for`
+   and `id` attributes.
+
+10. **Identify page language:** I added `lang="en"` to the HTML element
+    so assistive technologies can determine that the page is written
+    in English.
+
+11. **Use markup to convey meaning and structure:** I used semantic HTML
+    elements including header, main, section, form, table, thead, tbody,
+    and footer rather than constructing the entire interface from generic
+    div elements.
+
+12. **Create designs for different viewport sizes:** I created a responsive
+    layout using a CSS media query and Bootstrap responsive features. On
+    smaller screens, the account and movie sections switch to vertical
+    layouts and the movie table can scroll horizontally.
+    
 ## Challenges
 
 One challenge I faced was changing my previous Movie Watchlist from storing data in a JavaScript array to using MongoDB. I had to update the server routes to use MongoDB queries and MongoDB `_id` values.
